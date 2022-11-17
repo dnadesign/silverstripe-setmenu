@@ -1,0 +1,10 @@
+---
+Only:
+  moduleexists: silverstripe/subsites
+---
+DNADesign\SetMenu\Model\MenuSet:
+  extensions:
+    MenuSubsite : DNADesign\SetMenu\Extensions\MenuSubsiteExtension
+DNADesign\SetMenu\Model\MenuItem:
+  extensions:
+    MenuSubsite : DNADesign\SetMenu\Extensions\MenuSubsiteExtension
