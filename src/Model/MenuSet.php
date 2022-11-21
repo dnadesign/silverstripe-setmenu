@@ -14,7 +14,7 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 class MenuSet extends DataObject implements PermissionProvider
 {
-    private static $table_name = 'MenuSet';
+    private static $table_name = 'MenuSets';
 
     private static $db = [
         'Key' => 'Varchar(255)',

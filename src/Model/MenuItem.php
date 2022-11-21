@@ -13,7 +13,7 @@ use SilverStripe\Forms\TreeDropdownField;
 
 class MenuItem extends DataObject
 {
-    private static $table_name = 'MenuItem';
+    private static $table_name = 'MenuItems';
 
     private static $db = [
         'Title' => 'Varchar(255)',

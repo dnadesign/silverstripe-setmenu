@@ -38,8 +38,8 @@ class MenuResetTask extends BuildTask
             exit;
         }
 
-        DB::query('TRUNCATE Table MenuSet');
-        DB::query('TRUNCATE Table MenuItem');
+        DB::query('TRUNCATE Table MenuSets');
+        DB::query('TRUNCATE Table MenuItems');
 
         exit('DONE');
     }

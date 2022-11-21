@@ -40,6 +40,14 @@ DNADesign\SetMenu\Model\MenuSet:
 ```
 
 On `/dev/build` they will be created automatically.
+
+## Migration from MenuManager
+The classes in this module are namespaced, and the table names are plural, so this module is able to be installed without removing MenuManager first. 
+
+The intent for this is to allow a migration from MenuManager to Set Menu other by first deploying the module, creating the menus in the production environment, then later, deploying the template changes.
+
+This avoids a state where the content must be hurriedly created after deployment. 
+
 ## Usage
 
 Use the `$MenuType('Name')` template function to retrieve the MenuSet DataList:
