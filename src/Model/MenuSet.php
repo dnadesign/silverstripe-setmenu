@@ -146,11 +146,7 @@ class MenuSet extends DataObject implements PermissionProvider
 
     public function canView($member = null)
     {
-        if (Permission::check('MANAGE_MENUS')) {
-            return true;
-        }
-
-        return parent::canView($member = null);
+        return true;
     }
 
     public function canCreate($member = null, $context = [])
