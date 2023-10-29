@@ -5,8 +5,8 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": "^8",
-        "silverstripe/cms": "^4.10",
-		"symbiote/silverstripe-gridfieldextensions": "^3.3"
+        "silverstripe/cms": "^5",
+		"symbiote/silverstripe-gridfieldextensions": "^4"
     },
 	"minimum-stability": "dev",
 	"prefer-stable": true
