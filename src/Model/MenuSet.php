@@ -19,7 +19,8 @@ class MenuSet extends DataObject implements PermissionProvider
     private static $db = [
         'Key' => 'Varchar(255)',
         'Name' => 'Varchar(255)',
-        'Type' => 'Varchar(255)'
+        'Type' => 'Varchar(255)',
+        'Sort' => 'Int',
     ];
 
     private static $has_many = [
@@ -35,6 +36,8 @@ class MenuSet extends DataObject implements PermissionProvider
         'Type'
     ];
 
+    private static $default_sort = 'Sort';
+
     /**
      * Create the MenuSets as defined in configuration
      */
@@ -42,18 +45,28 @@ class MenuSet extends DataObject implements PermissionProvider
     {
         parent::requireDefaultRecords();
 
-        $defaultSets = $this->getMenuSetsFromConfig();
+        $defaultSets = $this->getMenuSetsFromConfig('default_sets');
 
+        // Create menu sets for the main site (SubsiteID = 0)
+        $this->createMenuSetsFromConfig($defaultSets);
+
+        // Check for subsites
         if (class_exists('SilverStripe\Subsites\Model\Subsite')) {
-            $subsites = Subsite::all_sites();
+            $subsites = Subsite::all_sites(false);
 
-            $subsites->each(function ($subsite) use ($defaultSets) {
+            $subsites->each(function ($subsite) {
                 Subsite::changeSubsite($subsite->ID);
 
-                $this->createMenuSetsFromConfig($defaultSets, $subsite->ID);
+                // Retrieve menu sets based on subsite's theme name
+                if (!$subsite->Theme) {
+                    return;
+                }
+
+                $subsiteSets = $this->getMenuSetsFromConfig($subsite->Theme);
+                if ($subsiteSets) {
+                    $this->createMenuSetsFromConfig($subsiteSets, $subsite->ID);
+                }
             });
-        } else {
-            $this->createMenuSetsFromConfig($defaultSets);
         }
     }
 
@@ -101,9 +114,9 @@ class MenuSet extends DataObject implements PermissionProvider
      *
      * @return String[]
      */
-    public function getMenuSetsFromConfig()
+    public function getMenuSetsFromConfig($setType)
     {
-        return $this->config()->get('default_sets') ?: [];
+        return $this->config()->get($setType) ?: [];
     }
 
     public function getCMSFields()
@@ -112,7 +125,8 @@ class MenuSet extends DataObject implements PermissionProvider
 
         $fields->removeByName([
             'Key',
-            'MenuItems'
+            'MenuItems',
+            'Sort'
         ]);
 
         $fields->addFieldsToTab(
@@ -187,6 +201,6 @@ class MenuSet extends DataObject implements PermissionProvider
      */
     public function isDefaultSet()
     {
-        return array_key_exists($this->Key, $this->getMenuSetsFromConfig());
+        return array_key_exists($this->Key, $this->getMenuSetsFromConfig('default_sets'));
     }
 }

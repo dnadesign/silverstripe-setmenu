@@ -10,6 +10,7 @@ use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldImportButton;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 class MenuAdmin extends ModelAdmin
 {
@@ -36,6 +37,17 @@ class MenuAdmin extends ModelAdmin
         ]);
 
         return $config;
+    }
+
+    public function getEditForm($id = null, $fields = null)
+    {
+        $form = parent::getEditForm($id, $fields);
+
+        $gridFieldName = $this->sanitiseClassName($this->modelClass);
+        $gridField = $form->Fields()->fieldByName($gridFieldName);
+        $gridField->getConfig()->addComponent(new GridFieldOrderableRows());
+
+        return $form;
     }
 
     /**
