@@ -1,7 +1,7 @@
 {
     "name": "dnadesign/silverstripe-setmenu",
     "type": "silverstripe-vendormodule",
-    "description" : "A SilverStripe module for managing configurable and sortable menu sets.",
+    "description" : "A SilverStripe module for managing configurable and orderable menu sets.",
     "license": "BSD-3-Clause",
     "require": {
         "php": "^8",

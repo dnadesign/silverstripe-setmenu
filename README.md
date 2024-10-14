@@ -10,20 +10,8 @@ This module was inspired by the following modules, but modified for our tastes:
 This module is baked for Silverstripe 4 and Php 8
 
 ## Installation
+`composer require dnadesign/silverstripe-setmenu`
 
-This module is not yet published on packagist, so install the module by including it in your **composer.json** with a repository definition.
-
-```
-    "require": {
-        "dnadesign/silverstripe-setmenu": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/dnadesign/silverstripe-setmenu.git"
-        }
-    ],
-```
 ## Configuration
 Define the **MenuSet**s and the group they belong to in .yml configuration by setting `default_sets`. 
 
@@ -36,7 +24,18 @@ DNADesign\SetMenu\Model\MenuSet:
     Main nav: Main
     Main footer: Footer
     Secondary footer: Footer
-    Auxilliary Footer: Footer
+```
+Additionally, subsite menusets can be configured. Currently the mechanism to do this is to match the theme name to the menu definition. This would also require a template to be copied to the subsite theme to override it and make use of the different menu sets.
+i.e.
+
+```
+DNADesign\SetMenu\Model\MenuSet:
+  default_sets:
+    Main nav: Main
+    Main footer: Footer
+  subsitetheme:
+    Primary: Main
+    Auxilliary: Secondary
 ```
 
 On `/dev/build` they will be created automatically.
