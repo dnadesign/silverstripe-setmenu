@@ -6,8 +6,13 @@
     "require": {
         "php": "^8",
         "silverstripe/cms": "^5",
-		"symbiote/silverstripe-gridfieldextensions": "^4"
+        "symbiote/silverstripe-gridfieldextensions": "^4"
     },
-	"minimum-stability": "dev",
-	"prefer-stable": true
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DNADesign\\SetMenu\\": "src"
+        }
+    }
 }

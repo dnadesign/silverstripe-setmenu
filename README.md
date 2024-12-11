@@ -7,7 +7,7 @@ This module was inspired by the following modules, but modified for our tastes:
 -  [guttmann/silverstripe-menumanager-subsites](https://github.com/guttmann/silverstripe-menumanager-subsites)
 
 ## Requirements
-This module is baked for Silverstripe 4 and Php 8
+This module is baked for Silverstripe 5 and Php 8
 
 ## Installation
 `composer require dnadesign/silverstripe-setmenu`
