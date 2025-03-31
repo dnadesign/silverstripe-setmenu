@@ -6,14 +6,20 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Permission;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\LinkField\Form\MultiLinkField;
+use SilverStripe\LinkField\Models\ExternalLink;
+use SilverStripe\LinkField\Models\Link;
+use SilverStripe\LinkField\Models\SiteTreeLink;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Subsites\Model\Subsite;
-use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use SilverStripe\Versioned\Versioned;
 
 class MenuSet extends DataObject implements PermissionProvider
 {
+    private static array $extensions = [
+        Versioned::class,
+    ];
+
     private static $table_name = 'MenuSets';
 
     private static $db = [
@@ -24,7 +30,11 @@ class MenuSet extends DataObject implements PermissionProvider
     ];
 
     private static $has_many = [
-        'MenuItems' => MenuItem::class,
+        'MenuItems' => Link::class . '.Owner',
+    ];
+
+    private static array $owns = [
+        'MenuItems'
     ];
 
     private static $cascade_deletes = [
@@ -129,22 +139,22 @@ class MenuSet extends DataObject implements PermissionProvider
             'Sort'
         ]);
 
+        $menuItemsField = MultiLinkField::create('MenuItems')
+            ->setAllowedTypes([SiteTreeLink::class, ExternalLink::class]);
+
+        if (!Permission::check('MANAGE_MENUS')) {
+            $menuItemsField->performReadonlyTransformation(true);
+        }
+
         $fields->addFieldsToTab(
             'Root.Main',
             [
                 TextField::create('Type')
                     ->setDescription('<em>Determined by configuration</em>')
                     ->performDisabledTransformation(),
-                new GridField(
-                    'MenuItems',
-                    'Menu Items',
-                    $this->MenuItems(),
-                    $config = GridFieldConfig_RecordEditor::create()
-                )
+                $menuItemsField
             ]
         );
-
-        $config->addComponent(new GridFieldOrderableRows('Sort'));
 
         return $fields;
     }
