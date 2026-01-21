@@ -2,6 +2,8 @@
 
 namespace DNADesign\SetMenu\Model;
 
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\TextField;
@@ -47,6 +49,16 @@ class MenuSet extends DataObject implements PermissionProvider
     ];
 
     private static $default_sort = 'Sort';
+
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'Key',
+            'Sort',
+        ],
+        'fieldClasses' => [
+            'Type' => ReadonlyField::class,
+        ],
+    ];
 
     /**
      * Create the MenuSets as defined in configuration
@@ -129,34 +141,17 @@ class MenuSet extends DataObject implements PermissionProvider
         return $this->config()->get($setType) ?: [];
     }
 
-    public function getCMSFields()
+    public function getCMSFields(): FieldList
     {
-        $fields = parent::getCMSFields();
+        $this->beforeUpdateCMSFields(function (FieldList $fields): void {
+            $fields->dataFieldByName('Type')?->setDescription('<em>Determined by configuration</em>');
 
-        $fields->removeByName([
-            'Key',
-            'MenuItems',
-            'Sort'
-        ]);
+            if (!Permission::check('MANAGE_MENUS')) {
+                $fields->dataFieldByName('MenuItems')?->setReadonly(true);
+            }
+        });
 
-        $menuItemsField = MultiLinkField::create('MenuItems')
-            ->setAllowedTypes([SiteTreeLink::class, ExternalLink::class]);
-
-        if (!Permission::check('MANAGE_MENUS')) {
-            $menuItemsField->performReadonlyTransformation(true);
-        }
-
-        $fields->addFieldsToTab(
-            'Root.Main',
-            [
-                TextField::create('Type')
-                    ->setDescription('<em>Determined by configuration</em>')
-                    ->performDisabledTransformation(),
-                $menuItemsField
-            ]
-        );
-
-        return $fields;
+        return parent::getCMSFields();
     }
 
     // Permissions: MenuItem reuses the permission code defined here
