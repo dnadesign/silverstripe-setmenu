@@ -54,7 +54,7 @@ class MenuResetTask extends BuildTask
             $output->writeln('This task will delete all MenuSet and MenuItem objects.');
             $output->writeln('Run /dev/build/ afterwards to repopulate MenuSet from config.');
             $output->writeln('Re-run with --confirm (CLI) or ?confirm=1 (browser) to proceed.');
-            $output->writeln('Example: vendor/bin/sake dev/tasks/menu-truncate-task confirm=1');
+            $output->writeln('Example: vendor/bin/sake dev/tasks/menu-truncate-task --confirm=1');
             return Command::SUCCESS;
         }
 
